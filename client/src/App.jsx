@@ -1,4 +1,4 @@
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy ,useExperimentalFarcasterSigner} from "@privy-io/react-auth";
 import { useEffect } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { useSetActiveWallet } from '@privy-io/wagmi';
@@ -6,9 +6,12 @@ import { useAccount, useBalance } from "wagmi";
 import { encodeFunctionData } from 'viem';
 
 
+
 export default function App() {
   const { ready, authenticated, login, user, logout, exportWallet } = usePrivy();
   const { address } = useAccount()
+  const { requestFarcasterSigner,submitCast } = useExperimentalFarcasterSigner();
+
 
   const hasEmbeddedWallet = !!user?.linkedAccounts.find(
     (account) => account.type === "wallet" && account.walletClient === "privy"
@@ -100,6 +103,15 @@ export default function App() {
     console.log('Transaction hash:', transactionHash);
   }
 
+  const sumbit = async () => {
+    try {
+      const {hash} = await submitCast({text: 'Hello world!'});
+      console.log('Transaction hash:', hash);
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <div className="App">
@@ -169,6 +181,28 @@ export default function App() {
             </div>
           </div>
         )}
+        {
+          ready && authenticated  && (
+            <div className="mt-8 w-full max-w-xl bg-slate-700/90 backdrop-blur-lg rounded-lg p-6 shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">Farcaster Account Info</h2>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => requestFarcasterSigner()}
+                  className="mt-4 px-6 py-3 rounded-lg font-semibold transition-colors duration-150 bg-blue-500 hover:bg-blue-600"
+                >
+                  Request Farcaster Signer
+                </button>
+                <button
+                  onClick={sumbit}
+                  className="mt-4 px-6 py-3 rounded-lg font-semibold transition-colors duration-150 bg-blue-500 hover:bg-blue-600"
+                >
+                  Submit Cast
+                </button>
+              </div>
+
+            </div>
+          )
+        }
       </div>
     </div>
   );
