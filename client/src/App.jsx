@@ -16,68 +16,6 @@ export default function App() {
   const { submitCast } =
     useExperimentalFarcasterSigner();
 
-  // const send = async () => {
-  //   try {
-  //     const provider = await wallet.getEthereumProvider();
-  //     const transactionRequest = {
-  //       to: "0xf7d4041e751E0b4f6eA72Eb82F2b200D278704A4",
-  //       value: 1e15,
-  //     };
-  //     const transactionHash = await provider.request({
-  //       method: "eth_sendTransaction",
-  //       params: [transactionRequest],
-  //     });
-  //     console.log("Transaction hash:", transactionHash);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const write = async () => {
-  //   const provider = await wallet.getEthereumProvider();
-  //   const data = encodeFunctionData({
-  //     abi: [
-  //       {
-  //         inputs: [
-  //           {
-  //             internalType: "uint256",
-  //             name: "num",
-  //             type: "uint256",
-  //           },
-  //         ],
-  //         name: "store",
-  //         outputs: [],
-  //         stateMutability: "nonpayable",
-  //         type: "function",
-  //       },
-  //       {
-  //         inputs: [],
-  //         name: "retrieve",
-  //         outputs: [
-  //           {
-  //             internalType: "uint256",
-  //             name: "",
-  //             type: "uint256",
-  //           },
-  //         ],
-  //         stateMutability: "view",
-  //         type: "function",
-  //       },
-  //     ],
-  //     functionName: "store",
-  //     args: [42],
-  //   });
-
-  //   const transactionRequest = {
-  //     to: "0xe8d82b9e3f2c165ddfe69f749eb1a2c9c9032b73",
-  //     data: data,
-  //   };
-  //   const transactionHash = await provider.request({
-  //     method: "eth_sendTransaction",
-  //     params: [transactionRequest],
-  //   });
-  //   console.log("Transaction hash:", transactionHash);
-  // };
 
   const [castText, setCastText] = useState("");
 

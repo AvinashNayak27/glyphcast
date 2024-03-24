@@ -36,6 +36,69 @@ function Wallet() {
         setActiveWallet(wallet);
       }
     }, [authenticated, user]);
+
+      const send = async () => {
+    try {
+      const provider = await wallet.getEthereumProvider();
+      const transactionRequest = {
+        to: "0xf7d4041e751E0b4f6eA72Eb82F2b200D278704A4",
+        value: 1e15,
+      };
+      const transactionHash = await provider.request({
+        method: "eth_sendTransaction",
+        params: [transactionRequest],
+      });
+      console.log("Transaction hash:", transactionHash);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const write = async () => {
+    const provider = await wallet.getEthereumProvider();
+    const data = encodeFunctionData({
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "num",
+              type: "uint256",
+            },
+          ],
+          name: "store",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "retrieve",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      functionName: "store",
+      args: [42],
+    });
+
+    const transactionRequest = {
+      to: "0xe8d82b9e3f2c165ddfe69f749eb1a2c9c9032b73",
+      data: data,
+    };
+    const transactionHash = await provider.request({
+      method: "eth_sendTransaction",
+      params: [transactionRequest],
+    });
+    console.log("Transaction hash:", transactionHash);
+  };
   
   return (
     <div className="flex min-h-screen bg-gradient-to-r from-slate-800 to-slate-900 text-white">
@@ -49,6 +112,21 @@ function Wallet() {
           <p className="text-lg mb-2"><strong>Address:</strong> {address}</p>
           <p className="text-lg mb-2"><strong>Current chain ID:</strong> {wallet?.chainId.split(":")[1]}</p>
           <p className="text-lg mb-4"><strong>Balance:</strong> {(result?.data?.value.toString() / 1e18).toFixed(4)} ETH</p>
+          <div className="flex space-x-4">
+          <button
+            onClick={send}
+            disabled={!authenticated || !hasEmbeddedWallet}
+            className="px-6 py-3 rounded-lg font-semibold transition duration-150 ease-in-out bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400"
+          >
+            Send 0.001 ETH
+          </button>
+          <button
+            onClick={write}
+            disabled={!authenticated || !hasEmbeddedWallet}
+            className="px-6 py-3 rounded-lg font-semibold transition duration-150 ease-in-out bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-400"
+          >
+            Write to contract
+          </button>
           <button
             onClick={exportWallet}
             disabled={!authenticated || !hasEmbeddedWallet}
@@ -56,6 +134,7 @@ function Wallet() {
           >
             Export my wallet
           </button>
+          </div>
         </div>
       </div>
     )}

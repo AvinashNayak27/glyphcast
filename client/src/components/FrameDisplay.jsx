@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Player } from "@livepeer/react";
+import { useWallets } from "@privy-io/react-auth";
+import { encodeFunctionData } from "viem";
+import { useReadContract } from "wagmi";
 
 const FrameDisplay = ({ frameurl }) => {
   const [frameData, setFrameData] = useState({});
@@ -26,6 +29,8 @@ const FrameDisplay = ({ frameurl }) => {
       case "link":
         window.open(button.target, "_blank");
         break;
+      case "mint":
+        handleMint(button.target);
       default:
         console.warn("Action not implemented:", button.action);
     }
@@ -51,7 +56,7 @@ const FrameDisplay = ({ frameurl }) => {
     buttons.push({
       label: "View Product Page ↗️",
       action: "link",
-      target: frameurl, 
+      target: frameurl,
     });
   }
 
@@ -76,7 +81,7 @@ const FrameDisplay = ({ frameurl }) => {
               src={frameData["fc:frame:video"]}
             />
             <p className="absolute bottom-0 right-0 bg-black text-white text-xs p-1">
-              {frameurl} 
+              {frameurl}
             </p>
           </>
         )}
