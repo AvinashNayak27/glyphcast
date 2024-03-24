@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Player } from "@livepeer/react";
 
 const FrameDisplay = ({ frameurl }) => {
   const [frameData, setFrameData] = useState({});
@@ -10,6 +11,7 @@ const FrameDisplay = ({ frameurl }) => {
       .get(`http://localhost:3000/get-meta-tags?url=${frameurl}`)
       .then((response) => {
         setFrameData(response.data);
+        console.log('Frame data:', response.data);
       })
       .catch((error) => {
         console.error('Error fetching frame data: ', error);
@@ -45,20 +47,39 @@ const FrameDisplay = ({ frameurl }) => {
     }
   }
 
+  if (frameData["fc:frame:video"]) {
+    buttons.push({
+      label: "View Product Page ↗️",
+      action: "link",
+      target: frameurl, 
+    });
+  }
+
   return (
     <div className="max-w-xl mx-auto my-8 p-4 border-2 border-black rounded-lg shadow-lg">
       <div className="relative">
-        <img
-          src={imageUrl}
-          alt="Frame"
-          className={`w-full ${aspectRatio === "1.91:1" ? "h-56" : "h-64"
-            } border border-black cursor-pointer`} // Added cursor-pointer class here
-          onClick={() => window.open(frameurl, "_blank")}
-        />
-
-        <p className="absolute bottom-0 right-0 bg-black text-white text-xs p-1">
-          {frameurl}
-        </p>
+        {!frameData["fc:frame:video"] ? (
+          <img
+            src={imageUrl}
+            alt="Frame"
+            className={`w-full ${aspectRatio === "1.91:1" ? "h-56" : "h-64"
+              } border border-black cursor-pointer`}
+            onClick={() => window.open(frameurl, "_blank")}
+          />
+        ) : (
+          <>
+            <Player
+              autoPlay={true}
+              controls
+              width="100%"
+              height="100%"
+              src={frameData["fc:frame:video"]}
+            />
+            <p className="absolute bottom-0 right-0 bg-black text-white text-xs p-1">
+              {frameurl} 
+            </p>
+          </>
+        )}
       </div>
       <div className="mt-4 flex justify-center">
         <div className="flex w-full">

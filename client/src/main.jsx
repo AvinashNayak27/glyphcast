@@ -12,7 +12,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Profile from "./components/Profile.jsx";
 import Settigs from "./components/Settings.jsx";
-import Sidebar from "./components/Sidebar.jsx";
 import Wallet from "./components/Wallet.jsx";
 
 const config = createConfig({
@@ -23,6 +22,19 @@ const config = createConfig({
 });
 
 const queryClient = new QueryClient();
+
+import {
+  LivepeerConfig,
+  createReactClient,
+  studioProvider,
+} from "@livepeer/react";
+
+const livepeerClient = createReactClient({
+  provider: studioProvider({
+    apiKey: "76831c0e-4b22-4db5-9867-45362ce2bb32",
+  }),
+});
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -41,6 +53,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     >
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={config}>
+        <LivepeerConfig client={livepeerClient}>
           <Router>
             <Routes>
               <Route path="/" element={<App />} />
@@ -49,6 +62,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route path="/wallet" element={<Wallet />} />
             </Routes>
           </Router>
+        </LivepeerConfig>
         </WagmiProvider>
       </QueryClientProvider>
     </PrivyProvider>

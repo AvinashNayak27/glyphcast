@@ -7,7 +7,7 @@ import { encodeFunctionData } from "viem";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
-import FrameDisplay from "./components/FrameDIsplay";
+import FrameDisplay from "./components/FrameDisplay";
 
 export default function App() {
   const { ready, authenticated, login, user, logout, exportWallet } =
