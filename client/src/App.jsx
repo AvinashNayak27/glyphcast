@@ -7,6 +7,7 @@ import { encodeFunctionData } from "viem";
 import axios from "axios";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import FrameDisplay from "./components/FrameDIsplay";
 
 export default function App() {
   const { ready, authenticated, login, user, logout, exportWallet } =
@@ -126,6 +127,15 @@ export default function App() {
     fetchData();
   }, [user?.farcaster?.fid]);
 
+  function isValidURL(string) {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <div className="App flex flex-col min-h-screen bg-gradient-to-r from-slate-800 to-slate-900 text-white">
       <Navbar />
@@ -155,9 +165,14 @@ export default function App() {
                 key={index}
                 className="feed w-full max-w-2xl bg-slate-700/90 backdrop-blur-lg rounded-lg p-6 shadow-lg"
               >
-                <p className="text-lg">{message.text}</p>
+                {isValidURL(message.text) ? (
+                  <FrameDisplay frameurl={message.text} />
+                ) : (
+                  <p className="text-lg">{message.text}</p>
+                )}
               </div>
             ))}
+
           </div>
         </div>
       )}
