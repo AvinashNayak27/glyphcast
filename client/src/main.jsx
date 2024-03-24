@@ -1,26 +1,43 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { PrivyProvider } from '@privy-io/react-auth';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { createConfig } from "@privy-io/wagmi";
+import { baseSepolia } from "wagmi/chains";
+import { http } from "wagmi";
+import { WagmiProvider } from "@privy-io/wagmi";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
+const config = createConfig({
+  chains: [baseSepolia],
+  transports: {
+    [baseSepolia.id]: http(),
+  },
+});
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <PrivyProvider
       appId="clu57peqq021bvby6vwyd3pp6"
       config={{
-        loginMethods: ['farcaster'],
+        loginMethods: ["farcaster"],
         appearance: {
-          theme: 'light',
-          accentColor: '#676FFF',
+          theme: "light",
+          accentColor: "#676FFF",
         },
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+          createOnLogin: "users-without-wallets",
         },
       }}
     >
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={config}>
+          <App />
+        </WagmiProvider>
+      </QueryClientProvider>
     </PrivyProvider>
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
