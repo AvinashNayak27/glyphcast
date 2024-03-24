@@ -6,6 +6,7 @@ import { useWallets } from "@privy-io/react-auth";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { useAccount, useBalance } from "wagmi";
 import { usePrivy } from "@privy-io/react-auth";
+import { encodeFunctionData } from "viem";
 
 function Wallet() {
     const { ready, authenticated, user, exportWallet } = usePrivy();

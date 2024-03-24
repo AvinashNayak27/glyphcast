@@ -74,7 +74,6 @@ const FrameDisplay = ({ frameurl }) => {
         ) : (
           <>
             <Player
-              autoPlay={true}
               controls
               width="100%"
               height="100%"
