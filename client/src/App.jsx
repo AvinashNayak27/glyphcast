@@ -16,7 +16,7 @@ export default function App() {
 
   const { submitCast } = useExperimentalFarcasterSigner();
 
-  const [castText, setCastText] = useState("");
+  const [castText, setCastText] = useState(null);
 
   const submit = async () => {
     try {
@@ -32,7 +32,7 @@ export default function App() {
       } else {
         submissionData = { text: castText };
       }
-
+      console.log(submissionData);
       const { hash } = await submitCast(submissionData);
       alert("Cast submitted successfully");
       console.log("Cast hash:", hash);
