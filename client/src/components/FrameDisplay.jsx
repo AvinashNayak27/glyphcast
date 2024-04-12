@@ -11,7 +11,7 @@ const FrameDisplay = ({ frameurl }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/get-meta-tags?url=${frameurl}`)
+      .get(`https://getsource.fly.dev/get-meta-tags?url=${frameurl}`)
       .then((response) => {
         setFrameData(response.data);
         console.log('Frame data:', response.data);

@@ -13,6 +13,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./components/Profile.jsx";
 import Settigs from "./components/Settings.jsx";
 import Wallet from "./components/Wallet.jsx";
+import Upload from "./components/Upload.jsx";
 
 const config = createConfig({
   chains: [baseSepolia],
@@ -60,6 +61,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settigs />} />
               <Route path="/wallet" element={<Wallet />} />
+              <Route path="/upload" element={<Upload />} />
             </Routes>
           </Router>
         </LivepeerConfig>
