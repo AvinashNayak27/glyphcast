@@ -17,6 +17,7 @@ export default function App() {
   const { submitCast } = useExperimentalFarcasterSigner();
 
   const [castText, setCastText] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const submit = async () => {
     try {
@@ -55,13 +56,6 @@ export default function App() {
       newMessages.forEach((msg) => {
         if (msg.data.type === "MESSAGE_TYPE_CAST_ADD") {
           setMessages((prevMessages) => {
-            if (
-              msg.data.castAddBody &&
-              msg.data.castAddBody.text &&
-              msg.data.castAddBody.embeds &&
-              msg.data.castAddBody.embeds.length > 0
-            )
-              return prevMessages;
             const hashExists = prevMessages.some(
               (prevMsg) => prevMsg.hash === msg.hash
             );
@@ -104,10 +98,43 @@ export default function App() {
 
   const [uploading, setUploading] = useState(false); // State to track uploading status
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     const file = e.target.files[0];
+    const uploadURL = "https://safeupload.fly.dev/upload";
+    const generateSnapshotsURL = "https://safeupload.fly.dev/nsfwcheck";
     if (file) {
       setUploading(true); // Start uploading
+      setMessage("Uploading...");
+
+      const formData = new FormData();
+      formData.append("video", file);
+      const uploadResponse = await axios.post(uploadURL, formData);
+
+      console.log("Upload successful!");
+      console.log("Upload response data:", uploadResponse.data);
+      setMessage("Checking for NSFW content...");
+
+      const videoPath = uploadResponse.data.uploadPath;
+      const generateSnapshotsResponse = await axios.post(generateSnapshotsURL, {
+        videoPath,
+      });
+
+      console.log("Snapshots generation started successfully!");
+      console.log(
+        "Snapshots generation response data:",
+        generateSnapshotsResponse.data
+      );
+      if (generateSnapshotsResponse.data?.nsfwContent?.length === 1) {
+        console.log(
+          "NSFW content not detected. Uploading asset to Livepeer..."
+        );
+        setMessage("NSFW content not detected. Uploading asset to Livepeer...");
+      } else {
+        console.log("NSFW content detected. Asset not uploaded to Livepeer");
+        setMessage("NSFW content detected.");
+        return;
+      }
+
       createAsset({
         sources: [
           {
@@ -176,7 +203,7 @@ export default function App() {
                   id="video-upload"
                 />
               </div>
-              {uploading && <p className="text-lg mt-4">Uploading...</p>}
+              {uploading && <p className="text-lg mt-4">{message}</p>}
 
               <div className="flex items-center mt-4">
                 <button
