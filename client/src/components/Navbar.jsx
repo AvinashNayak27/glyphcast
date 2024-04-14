@@ -8,7 +8,10 @@ function Navbar() {
         <div className="navbar w-full flex justify-between items-center px-6 py-4 bg-slate-700 shadow-md">
             <h1 className="text-3xl font-bold ml-60">
                 Glyphcast <span className="text-blue-300">Farcaster Client for videos</span>
-                <span className="text-blue-500">{user?.farcaster?.displayName}</span>
+                <br />
+                {ready && authenticated && (
+                <span className="text-black">Welcome {user?.farcaster?.displayName}</span>
+                )}
             </h1>
 
             <div>
